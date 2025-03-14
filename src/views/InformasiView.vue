@@ -7,9 +7,7 @@
         Informasi Pengumuman
       </h1>
       <p class="text-primary text-center">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi quibusdam
-        mollitia nihil reprehenderit iste quae? Lorem, ipsum dolor sit amet
-        consectetur adipisicing elit. Aspernatur, eveniet?
+        {{ pengumuman }}
       </p>
     </div>
     <div class="bg-light rounded-lg shadow-md p-6 m-4 w-[80%]">
@@ -17,14 +15,19 @@
         Informasi Kecelakaan
       </h1>
       <p class="text-primary text-center">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi quibusdam
-        mollitia nihil reprehenderit iste quae? Lorem, ipsum dolor sit amet
-        consectetur adipisicing elit. Aspernatur, eveniet?
       </p>
     </div>
   </section>
   <footer></footer>
 </template>
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+// Ambil string dari localStorage
+const storedPengumuman = localStorage.getItem("pengumuman");
+const parsed = storedPengumuman ? JSON.parse(storedPengumuman) : { pengumuman: "Belum ada pengumuman" };
+
+const pengumuman = ref(parsed.pengumuman);
+</script>
 
 <style></style>

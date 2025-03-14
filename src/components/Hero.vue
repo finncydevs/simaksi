@@ -9,8 +9,8 @@
         <div class="flex items-center justify-center py-4">
           <div class="bg-teks p-2 rounded-lg shadow-md">
             <h1 class="text-dark text-md font-sm">
-              Sisa Kuota Tanggal 18 Februari 2025 adalah 0<br />
-              Cibodas Tutup, GunungPutri Tutup, Selabintana Tutup
+              Sisa Kuota Tanggal 18 Februari 2025<br />
+              Gunung Putri: {{ sisaKuota }}
             </h1>
           </div>
         </div>
@@ -19,7 +19,43 @@
   </section>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+// Konversi parsing ke number
+let storedKuota = localStorage.getItem("kuota");
+let deKuota = 0;
+if (storedKuota) {
+  try {
+    const parsed = JSON.parse(storedKuota);
+    deKuota = Number(parsed.gnPutri) || 0;
+    console.log("Kuota admin (deKuota):", deKuota);
+  } catch (e) {
+    deKuota = Number(storedKuota) || 0;
+  }
+}
+
+// Variabel reaktif untuk sisa kuota
+const sisaKuota = ref(deKuota);
+
+// Fungsi untuk mengambil data pendakis dari API dan menghitung sisa kuota
+const fetchPendakis = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/pendakis");
+    const countPendakis = response.data.pendakis.length;
+    console.log(countPendakis, "pendaki terdaftar");
+    sisaKuota.value = deKuota - countPendakis;
+    console.log("Sisa Kuota:", sisaKuota.value);
+  } catch (error) {
+    console.error("Gagal mengambil data pendakis:", error);
+  }
+};
+
+onMounted(() => {
+  fetchPendakis();
+});
+</script>
 
 <style>
 .background {
